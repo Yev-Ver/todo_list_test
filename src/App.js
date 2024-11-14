@@ -1,23 +1,44 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import ToDoForm from './ToDoForm';
+import ToDoItem from './ToDoItem';
 import './App.css';
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+
+  const addTask = (task) => {
+    if (task) {
+      setTasks([...tasks, { text: task, isCompleted: false }]);
+    }
+  };
+
+  const toggleComplete = (index) => {
+    const newTasks = [...tasks];
+    newTasks[index].isCompleted = !newTasks[index].isCompleted;
+    setTasks(newTasks);
+  };
+
+  const removeTask = (index) => {
+    const newTasks = [...tasks];
+    newTasks.splice(index, 1);
+    setTasks(newTasks);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>To-Do List</h1>
+      <ToDoForm addTask={addTask} />
+      <div className="todo-list">
+        {tasks.map((task, index) => (
+          <ToDoItem
+            key={index}
+            index={index}
+            task={task}
+            toggleComplete={toggleComplete}
+            removeTask={removeTask}
+          />
+        ))}
+      </div>
     </div>
   );
 }
